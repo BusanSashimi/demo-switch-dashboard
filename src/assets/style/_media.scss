@@ -1,0 +1,46 @@
+@import "./variables.scss";
+
+@media (max-width: 768px) {
+  #app {
+    min-width: 0 !important;
+
+    .page {
+      > section {
+        margin-left: 0 !important;
+      }
+    }
+
+    .show_sub_menu {
+      margin-left: 0 !important;
+
+      > div {
+        > div {
+          transform: translate($sub-menu-width, 0);
+        }
+      }
+    }
+
+    .icon-menu {
+      display: none !important;
+    }
+  }
+}
+
+@mixin for-phone-only {
+  @media (max-width: 599px) { @content; }
+}
+@mixin for-tablet-portrait-up {
+  @media (min-width: 600px) { @content; }
+}
+@mixin for-tablet-landscape-up {
+  @media (min-width: 900px) { @content; }
+}
+@mixin mobile-universal {
+  @media (max-width: 900px) { @content; }
+}
+@mixin for-desktop-up {
+  @media (min-width: 900px) { @content; }
+}
+@mixin for-big-desktop-up {
+  @media (min-width: 1800px) { @content; }
+}
