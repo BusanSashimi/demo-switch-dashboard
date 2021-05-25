@@ -2,6 +2,10 @@
 
 import { register } from 'register-service-worker';
 
+const notifyUserAboutUpdate = (worker: ServiceWorker) => {
+  worker.postMessage({ action: 'skipWaiting' });
+}
+
 if (process.env.NODE_ENV === 'production') {
   register(`${process.env.BASE_URL}service-worker.js`, {
     ready() {
@@ -19,8 +23,9 @@ if (process.env.NODE_ENV === 'production') {
     updatefound() {
       console.log('New content is downloading.');
     },
-    updated() {
+    updated(registration: ServiceWorkerRegistration) {
       console.log('New content is available; please refresh.');
+      notifyUserAboutUpdate(registration.waiting as ServiceWorker);
     },
     offline() {
       console.log('No internet connection found. App is running in offline mode.');
@@ -28,5 +33,12 @@ if (process.env.NODE_ENV === 'production') {
     error(error) {
       console.error('Error during service worker registration:', error);
     },
+  });
+
+  let refreshing!: boolean;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (refreshing) { return; }
+    window.location.reload();
+    refreshing = true;
   });
 }
